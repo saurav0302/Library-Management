@@ -35,6 +35,9 @@ router.put('/:id', auth, isLibrarian, async (req, res) => {
         const id = req.params.id;
         const data = req.body;
         const book = await Book.findByIdAndUpdate(id, data, { new: true });
+        if (!book) {
+            return res.status(404).json({ error: 'Book not found' });
+        }
         res.json(book);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -46,6 +49,9 @@ router.delete('/:id', auth, isLibrarian, async (req, res) => {
     try {
         const id = req.params.id;
         const book = await Book.findByIdAndDelete(id);
+        if (!book) {
+            return res.status(404).json({ error: 'Book not found' });
+        }
         res.json(book);
     } catch (error) {
         res.status(400).json({ error: error.message });
