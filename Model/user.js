@@ -30,9 +30,26 @@ const userSchema = new mongoose.Schema({
         }
     },
     borrowedBooks: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Book',
-        required: false
+        bookId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Book',
+            required: false
+        },
+        title: {
+            type: String,
+            required: false
+        }
+    }],
+    reserveBooks: [{
+        bookId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Book',
+            required: false
+        },
+        title: {
+            type: String,
+            required: false
+        }
     }],
     membershipStartDate: {
         type: Date,
@@ -64,14 +81,19 @@ userSchema.pre('save', async function(next) {
         // Check borrowed books limits
         if (this.isModified('membershipType') || this.isModified('borrowedBooks')) {
             if (this.membershipType === 'Regular' && this.borrowedBooks.length > 1) {
-                throw new Error('Regular members can borrow only 1 book at a time.');
+                throw new Error('You reached your limit of 1 book. Now return book and then try again.');
             }
             if (this.membershipType === 'Premium' && this.borrowedBooks.length > 5) {
-                throw new Error('Premium members can borrow up to 5 books at a time.');
+                throw new Error('You reached your limit of 5 books. Now return book and then try again.');
             }
             if (this.membershipType === 'Student' && this.borrowedBooks.length > 3) {
-                throw new Error('Students can borrow up to 3 books at a time.');
+                throw new Error('You reached your limit of 3 books. Now return book and then try again.');
             }
+        }
+
+         // Check reserve books limits (maximum 2 reserved books)
+         if (this.isModified('reserveBooks') && this.reserveBooks.length > 2) {
+            throw new Error('You can only reserve up to 2 books. Please cancel a reservation before reserving more.');
         }
 
         // Handle password hashing

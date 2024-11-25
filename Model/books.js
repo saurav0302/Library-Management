@@ -27,6 +27,10 @@ const bookSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
+    borrowed: {
+        type: Boolean,
+        default: false
+    },
     createdAt: {
         type: Date,
         default: Date.now
