@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const User = require('../Model/user');
 const { generateToken } = require('../utils/genrateTokens');
-const { auth} = require('../middleware/jwt');
+// const { auth} = require('../middleware/jwt'); by bearer
+const { auth } = require('../middleware/jwt-cookies'); // by cookies
 
 
 // Sign up the User 

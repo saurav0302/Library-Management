@@ -2,7 +2,8 @@ const express = require('express')
 const router = express.Router()
 const User = require('../Model/user');
 const isAdmin = require('../middleware/admin');
-const { auth } = require('../middleware/jwt');
+//const { auth } = require('../middleware/jwt'); by bearer
+const { auth} = require('../middleware/jwt-cookies'); // by cookies
 
 // Get all the users
 router.get('/users', auth, isAdmin, async (req, res) => {
